@@ -76,7 +76,7 @@ public class JMenuBarTest extends JFrame implements ActionListener {
 		}
 		
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().contentEquals("Open...")){
+		if(e.getActionCommand().contentEquals("Open...")){ // use FilePicker
 			// Open file
 			
 		} else if(e.getActionCommand().contentEquals("Save")) {
@@ -99,7 +99,7 @@ public class JMenuBarTest extends JFrame implements ActionListener {
 			br.close();
 		}catch (FileNotFoundException e) { // FNFE must come FIRST, before IOE
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (IOException e) { // As above.
 			e.printStackTrace();
 		} 
 	}
