@@ -3,10 +3,12 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -14,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class JMenuBarTest extends JFrame implements ActionListener {
 
@@ -87,10 +90,21 @@ public class JMenuBarTest extends JFrame implements ActionListener {
 			System.exit(0);
 		}
 	}
-	
+	//////////////////////////////////////////////////////////
+	final JFileChooser Chooser = new JFileChooser();
+	FileNameExtensionFilter filter = new FileNameExtensionFilter ( "Text Files Only", "txt");
+	Chooser.setFileFilter(filter);
+	///////////////////////////////////////////////////
 	private void open() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("test.txt"));
+	        int returnVal = Chooser.showOpenDialog(JMenuBarTest.this);
+
+	        if (returnVal == JFileChooser.APPROVE_OPTION) {
+	            File file = Chooser.getSelectedFile();
+	        } else {
+	        	return;
+	        }
+			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line;
 			while(( line = br.readLine()) != null ) {
 				text.append(line + "\n");
