@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -96,10 +97,11 @@ public class JMenuBarTest extends JFrame implements ActionListener {
 			}
 			
 			br.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		}catch (FileNotFoundException e) { // FNFE must come FIRST, before IOE
 			e.printStackTrace();
-		}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 	}
 
 	}
