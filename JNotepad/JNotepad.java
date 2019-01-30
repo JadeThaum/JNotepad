@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -18,10 +20,10 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class JMenuBarTest extends JFrame implements ActionListener {
+public class JNotepad extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	JTextArea text  = new JTextArea();
+	JTextArea text  = new JTextArea(); // TODO work on tabbed interface with new text areas per-tab
 
 
 	/**
@@ -31,7 +33,7 @@ public class JMenuBarTest extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					JMenuBarTest frame = new JMenuBarTest();
+					JNotepad frame = new JNotepad();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +45,7 @@ public class JMenuBarTest extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public JMenuBarTest() {
+	public JNotepad() {
 		super("JMenu Test");
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,12 +78,22 @@ public class JMenuBarTest extends JFrame implements ActionListener {
 			add(text);
 			setJMenuBar(mmb);
 			
+			///
+			ArrayList<File> MFL = new ArrayList<File>();
+			///
 		}
 		
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().contentEquals("Open...")){ // use FilePicker
 			// Open file
-			
+			int returnVal = Chooser.showOpenDialog(JNotepad.this);
+
+		    if (returnVal == JFileChooser.APPROVE_OPTION) {
+		        File file = Chooser.getSelectedFile();
+		        open(text,file);
+		    } else {
+		    	return; // do nothing unless a file is opened properly
+		    }
 		} else if(e.getActionCommand().contentEquals("Save")) {
 			
 		}else if (e.getActionCommand().contentEquals("Save As...")) {
@@ -93,29 +105,23 @@ public class JMenuBarTest extends JFrame implements ActionListener {
 	//////////////////////////////////////////////////////////
 	final JFileChooser Chooser = new JFileChooser();
 	FileNameExtensionFilter filter = new FileNameExtensionFilter ( "Text Files Only", "txt");
-	Chooser.setFileFilter(filter);
-	///////////////////////////////////////////////////
-	private void open() {
+	//Chooser.setFileFilter(filter);
+	/*int */
+	///////////////////////////////////////////////////// 
+	private void open(JTextArea text, File file){ // input: the file from the dialog, and the textarea we're working with. Because we have a tabbed interface, we need to specify.
+		BufferedReader br = null;
 		try {
-	        int returnVal = Chooser.showOpenDialog(JMenuBarTest.this);
-
-	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            File file = Chooser.getSelectedFile();
-	        } else {
-	        	return;
-	        }
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line;
-			while(( line = br.readLine()) != null ) {
-				text.append(line + "\n");
-			}
-			
-			br.close();
+		br = new BufferedReader(new FileReader(file));
+		String line;
+		while(( line = br.readLine()) != null ) {
+			text.append(line + "\n");
+		}	
+		br.close();
 		}catch (FileNotFoundException e) { // FNFE must come FIRST, before IOE
 			e.printStackTrace();
 		} catch (IOException e) { // As above.
 			e.printStackTrace();
-		} 
+		}
 	}
 
 	}
