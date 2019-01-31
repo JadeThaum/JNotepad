@@ -87,15 +87,18 @@ public class JNotepad extends JFrame implements ActionListener {
 					
 			JMenu optmenu = new JMenu("Options");
 				JMenuItem charcount = new JMenuItem("Count Tabs");
-				JMenuItem opt2 = new JMenuItem("Change Background Color");
-				
-				JMenuItem[] items2 = {charcount, opt2};
+			JMenu colormenu = new JMenu("Change Color...   ");
+			JMenuItem col1 = new JMenuItem("Red");
+			JMenuItem col2 = new JMenuItem("Green");
+			JMenuItem col3 = new JMenuItem("Default");
+
+				JMenuItem[] items2 = {charcount, col1, col2, col3};
 				for (JMenuItem item : items2) {
 					item.addActionListener(this);
 				}
-				optmenu.add(charcount); optmenu.add(opt2);
+				optmenu.add(charcount); colormenu.add(col1); colormenu.add(col2); colormenu.add(col3);
 				
-			mmb.add(filemenu); mmb.add(optmenu);
+			mmb.add(filemenu); mmb.add(optmenu); optmenu.add(colormenu);
 			add(TabContent);
 			TabContent.addTab("(New 1)",null, text); // default blank file
 			setJMenuBar(mmb);
@@ -160,9 +163,15 @@ public class JNotepad extends JFrame implements ActionListener {
 			System.exit(0);
 		}else if (e.getActionCommand().contentEquals("Count Tabs")) {
 			JOptionPane.showMessageDialog(contentPane, TabContent.getTabCount() + " Tab(s) are open right now." );
-		}else if(e.getActionCommand().contentEquals("Change Background Color")) {
-			getContentPane().setBackground(Color.BLUE);
-		}
+			
+		// Font Color Selection
+		}else if(e.getActionCommand().contentEquals("Red")) {
+			TabContent.getComponentAt(TabContent.getSelectedIndex()).setForeground(Color.RED);
+		}else if(e.getActionCommand().contentEquals("Green")) {
+			TabContent.getComponentAt(TabContent.getSelectedIndex()).setForeground(Color.BLUE);
+		}else if(e.getActionCommand().contentEquals("Default")) {
+			TabContent.getComponentAt(TabContent.getSelectedIndex()).setForeground(Color.BLACK);
+		}	
 	}
 	//////////////////////////////////////////////////////////
 
