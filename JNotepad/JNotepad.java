@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -86,7 +87,7 @@ public class JNotepad extends JFrame implements ActionListener {
 					
 			JMenu optmenu = new JMenu("Options");
 				JMenuItem charcount = new JMenuItem("Count Tabs");
-				JMenuItem opt2 = new JMenuItem("Opt 2");
+				JMenuItem opt2 = new JMenuItem("Change Background Color");
 				
 				JMenuItem[] items2 = {charcount, opt2};
 				for (JMenuItem item : items2) {
@@ -157,8 +158,10 @@ public class JNotepad extends JFrame implements ActionListener {
 			TabContent.setTitleAt(TabContent.getSelectedIndex(), chooser.getSelectedFile().toString());
 		}else if (e.getActionCommand().contentEquals("Exit")) {
 			System.exit(0);
-		} else if (e.getActionCommand().contentEquals("Count Tabs")) {
+		}else if (e.getActionCommand().contentEquals("Count Tabs")) {
 			JOptionPane.showMessageDialog(contentPane, TabContent.getTabCount() + " Tab(s) are open right now." );
+		}else if(e.getActionCommand().contentEquals("Change Background Color")) {
+			getContentPane().setBackground(Color.BLUE);
 		}
 	}
 	//////////////////////////////////////////////////////////
