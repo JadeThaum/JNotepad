@@ -10,9 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -20,19 +18,19 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.basic.BasicButtonUI;
+
 
 public class JNotepad extends JFrame implements ActionListener {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	JTextArea text  = new JTextArea();
 	private JTabbedPane TabContent = new JTabbedPane();
-	final JFileChooser Chooser = new JFileChooser();
+	final JFileChooser chooser = new JFileChooser();
 
 	/**
 	 * Launch the application.
@@ -75,6 +73,8 @@ public class JNotepad extends JFrame implements ActionListener {
 				JMenuItem save = new JMenuItem("Save");
 				JMenuItem saveas = new JMenuItem("Save As...");
 				JMenuItem exit = new JMenuItem("Exit");
+				
+				
 			// Event handler reg
 				JMenuItem[] items = {newtab,open, save, saveas, exit};
 				for (JMenuItem item : items) {
@@ -82,15 +82,23 @@ public class JNotepad extends JFrame implements ActionListener {
 				}
 			// add all
 					filemenu.add(newtab); filemenu.add(open); filemenu.add(save); filemenu.add(saveas); filemenu.add(exit);
-			JMenu editmenu = new JMenu("Edit");
-			mmb.add(filemenu);
+					
+					
+			JMenu optmenu = new JMenu("Options");
+				JMenuItem charcount = new JMenuItem("Count Tabs");
+				JMenuItem opt2 = new JMenuItem("Opt 2");
+				
+				JMenuItem[] items2 = {charcount, opt2};
+				for (JMenuItem item : items2) {
+					item.addActionListener(this);
+				}
+				optmenu.add(charcount); optmenu.add(opt2);
+				
+			mmb.add(filemenu); mmb.add(optmenu);
 			add(TabContent);
 			TabContent.addTab("(New 1)",null, text); // default blank file
 			setJMenuBar(mmb);
-			
-			///
-			ArrayList<File> MFL = new ArrayList<File>();
-			///
+
 		}
 	    protected JComponent makeTextPanel(String text) {
 	        JPanel panel = new JPanel(false);
@@ -102,54 +110,55 @@ public class JNotepad extends JFrame implements ActionListener {
 	    }
 		
 	public void actionPerformed(ActionEvent e) {
-		String debugstring = e.getActionCommand();
 		if (e.getActionCommand().contentEquals("New File")) {
 			// make new file
 			JTextArea jta = new JTextArea();
-		 TabContent.addTab("New "+(TabContent.getTabCount()+1)+"",null,jta);
-
+		 TabContent.addTab("(New "+(TabContent.getTabCount()+1)+")",null,jta);
+		 TabContent.setSelectedIndex(TabContent.getTabCount()-1);
 		} else if(e.getActionCommand().contentEquals("Open...")){ // use FilePicker
 			// Open file
-			int ret = Chooser.showOpenDialog(JNotepad.this);
+			int ret = chooser.showOpenDialog(JNotepad.this);
 
 		    if (ret == JFileChooser.APPROVE_OPTION) {
-		        File file = Chooser.getSelectedFile();
+		        File file = chooser.getSelectedFile();
 		        open(((JTextArea)TabContent.getComponentAt(TabContent.getSelectedIndex())),file);
-		        TabContent.setTitleAt(TabContent.getSelectedIndex(), Chooser.getSelectedFile().toString());
+		        TabContent.setTitleAt(TabContent.getSelectedIndex(), chooser.getSelectedFile().toString());
 		    } else {
 		    	return; // do nothing unless a file is opened properly
 		    }
 		    
 		} else if(e.getActionCommand().contentEquals("Save")) {
 			// if file not found, go to save as
-			String SavePath = "";
-			SavePath = TabContent.getTitleAt(TabContent.getSelectedIndex()).toString();
-			if (!(SavePath.contains(")") )){
-				File file = Chooser.getSelectedFile();
+			String savePath = "";
+			savePath = TabContent.getTitleAt(TabContent.getSelectedIndex()).toString();
+			if (!(savePath.contains(")") )){
+				File file = chooser.getSelectedFile();
 				save(text,file);
 			}
 			else { // just saveAs at this point
 				
-				int ret = Chooser.showSaveDialog(JNotepad.this);
+				int ret = chooser.showSaveDialog(JNotepad.this);
 				
 				if (ret == JFileChooser.APPROVE_OPTION) {
-					File file = Chooser.getSelectedFile();
+					File file = chooser.getSelectedFile();
 					save(text,file);
 				}
-				TabContent.setTitleAt(TabContent.getSelectedIndex(), Chooser.getSelectedFile().toString());
+				TabContent.setTitleAt(TabContent.getSelectedIndex(), chooser.getSelectedFile().toString());
 			}
 			
 		}else if (e.getActionCommand().contentEquals("Save As...")) {
 			// saveAs();
-			int ret = Chooser.showSaveDialog(JNotepad.this);
+			int ret = chooser.showSaveDialog(JNotepad.this);
 			
 			if (ret == JFileChooser.APPROVE_OPTION) {
-				File file = Chooser.getSelectedFile();
+				File file = chooser.getSelectedFile();
 				save(text,file);
 			}
-			TabContent.setTitleAt(TabContent.getSelectedIndex(), Chooser.getSelectedFile().toString());
+			TabContent.setTitleAt(TabContent.getSelectedIndex(), chooser.getSelectedFile().toString());
 		}else if (e.getActionCommand().contentEquals("Exit")) {
 			System.exit(0);
+		} else if (e.getActionCommand().contentEquals("Count Tabs")) {
+			JOptionPane.showMessageDialog(contentPane, TabContent.getTabCount() + " Tab(s) are open right now." );
 		}
 	}
 	//////////////////////////////////////////////////////////
@@ -172,8 +181,6 @@ public class JNotepad extends JFrame implements ActionListener {
 	}
 	
 	private boolean save(JTextArea text, File file) {
-		// TODO
-		
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(file))) {
 		    text.write(fileOut);
 		}catch (FileNotFoundException e) { // FNFE must come FIRST, before IOE
