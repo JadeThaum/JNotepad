@@ -32,7 +32,7 @@ public class JNotepad extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	JTextArea text  = new JTextArea();
 	private JTabbedPane TabContent = new JTabbedPane();
-
+	final JFileChooser Chooser = new JFileChooser();
 
 	/**
 	 * Launch the application.
@@ -110,9 +110,9 @@ public class JNotepad extends JFrame implements ActionListener {
 
 		} else if(e.getActionCommand().contentEquals("Open...")){ // use FilePicker
 			// Open file
-			int returnVal = Chooser.showOpenDialog(JNotepad.this);
+			int ret = Chooser.showOpenDialog(JNotepad.this);
 
-		    if (returnVal == JFileChooser.APPROVE_OPTION) {
+		    if (ret == JFileChooser.APPROVE_OPTION) {
 		        File file = Chooser.getSelectedFile();
 		        open(((JTextArea)TabContent.getComponentAt(TabContent.getSelectedIndex())),file);
 		        TabContent.setTitleAt(TabContent.getSelectedIndex(), Chooser.getSelectedFile().toString());
@@ -122,8 +122,22 @@ public class JNotepad extends JFrame implements ActionListener {
 		    
 		} else if(e.getActionCommand().contentEquals("Save")) {
 			// if file not found, go to save as
-			
-			
+			String SavePath = "";
+			SavePath = TabContent.getTitleAt(TabContent.getSelectedIndex()).toString();
+			if (!(SavePath.contains(")") )){
+				File file = Chooser.getSelectedFile();
+				save(text,file);
+			}
+			else { // just saveAs at this point
+				
+				int ret = Chooser.showSaveDialog(JNotepad.this);
+				
+				if (ret == JFileChooser.APPROVE_OPTION) {
+					File file = Chooser.getSelectedFile();
+					save(text,file);
+				}
+				TabContent.setTitleAt(TabContent.getSelectedIndex(), Chooser.getSelectedFile().toString());
+			}
 			
 		}else if (e.getActionCommand().contentEquals("Save As...")) {
 			// saveAs();
@@ -133,15 +147,13 @@ public class JNotepad extends JFrame implements ActionListener {
 				File file = Chooser.getSelectedFile();
 				save(text,file);
 			}
+			TabContent.setTitleAt(TabContent.getSelectedIndex(), Chooser.getSelectedFile().toString());
 		}else if (e.getActionCommand().contentEquals("Exit")) {
 			System.exit(0);
 		}
 	}
 	//////////////////////////////////////////////////////////
-	final JFileChooser Chooser = new JFileChooser();
-	FileNameExtensionFilter filter = new FileNameExtensionFilter ( "Text Files Only", "txt");
-	//Chooser.setFileFilter(filter);
-	/*int */
+
 	///////////////////////////////////////////////////// 
 	private void open(JTextArea text, File file){ // input: the file from the dialog, and the textarea we're working with. Because we have a tabbed interface, we need to specify.
 		BufferedReader br = null;
@@ -162,13 +174,13 @@ public class JNotepad extends JFrame implements ActionListener {
 	private boolean save(JTextArea text, File file) {
 		// TODO
 		
-		
-		/*try {
+		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(file))) {
+		    text.write(fileOut);
 		}catch (FileNotFoundException e) { // FNFE must come FIRST, before IOE
 			e.printStackTrace();
 		} catch (IOException e) { // As above.
 			e.printStackTrace();
-		}*/
+		}
 		
 		return false;
 	}
