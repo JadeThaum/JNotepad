@@ -87,7 +87,7 @@ public class JNotepad extends JFrame implements ActionListener {
 					
 			JMenu optmenu = new JMenu("Options");
 				JMenuItem charcount = new JMenuItem("Count Tabs");
-			JMenu colormenu = new JMenu("Change Color...   ");
+			JMenu colormenu = new JMenu("Change Text Color...   ");
 			JMenuItem col1 = new JMenuItem("Red");
 			JMenuItem col2 = new JMenuItem("Green");
 			JMenuItem col3 = new JMenuItem("Default");
@@ -168,7 +168,7 @@ public class JNotepad extends JFrame implements ActionListener {
 		}else if(e.getActionCommand().contentEquals("Red")) {
 			TabContent.getComponentAt(TabContent.getSelectedIndex()).setForeground(Color.RED);
 		}else if(e.getActionCommand().contentEquals("Green")) {
-			TabContent.getComponentAt(TabContent.getSelectedIndex()).setForeground(Color.BLUE);
+			TabContent.getComponentAt(TabContent.getSelectedIndex()).setForeground(Color.GREEN);
 		}else if(e.getActionCommand().contentEquals("Default")) {
 			TabContent.getComponentAt(TabContent.getSelectedIndex()).setForeground(Color.BLACK);
 		}	
